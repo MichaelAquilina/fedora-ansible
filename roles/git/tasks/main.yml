@@ -20,6 +20,7 @@
 - name: push auto remote
   community.general.git_config:
     name: push.autoSetupRemote
+    scope: global
     value: 'true'
 
 - name: color ui is enabled

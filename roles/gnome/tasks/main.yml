@@ -14,6 +14,11 @@
     key: "/org/gnome/desktop/interface/enable-hot-corners"
     value: "false"
 
+- name: resize with windows right-click
+  dconf:
+    key: "/org/gnome/desktop/wm/preferences/resize-with-right-button"
+    value: "true"
+
 - name: center new windows
   dconf:
     key: /org/gnome/mutter/center-new-windows
