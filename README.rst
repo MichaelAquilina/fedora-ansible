@@ -1,9 +1,9 @@
-Tumbleweed Ansible
-==================
+Fedora Ansible
+==============
 
 |CircleCI|
 
-Setup an OpenSUSE Tumbleweed machine up from scratch.
+Setup a Fedora machine up from scratch.
 
 ::
 
@@ -11,5 +11,5 @@ Setup an OpenSUSE Tumbleweed machine up from scratch.
 
 Minimum version of ansible supported is 2.6
 
-.. |CircleCI| image:: https://circleci.com/gh/MichaelAquilina/tumbleweed-ansible.svg?style=svg
-   :target: https://circleci.com/gh/MichaelAquilina/tumbleweed-ansible
+.. |CircleCI| image:: https://dl.circleci.com/status-badge/img/gh/MichaelAquilina/fedora-ansible/tree/main.svg?style=svg
+   :target: https://circleci.com/gh/MichaelAquilina/fedora-ansible
