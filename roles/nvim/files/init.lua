@@ -63,6 +63,7 @@ packer.startup(function(use)
 
   use('ray-x/lsp_signature.nvim');
   use('williamboman/mason.nvim');
+  use('williamboman/mason-lspconfig.nvim')
 
   use('hrsh7th/nvim-cmp');
   use('hrsh7th/cmp-nvim-lsp');
@@ -173,6 +174,21 @@ cmp.setup({
 
 local cmp_nvim_lsp = require('cmp_nvim_lsp')
 require('mason').setup()
+require('mason-lspconfig').setup()
+
+require("mason-lspconfig").setup_handlers {
+    -- The first entry (without a key) will be the default handler
+    -- and will be called for each installed server that doesn't have
+    -- a dedicated handler.
+    function (server_name) -- default handler (optional)
+        require("lspconfig")[server_name].setup {}
+    end,
+    -- Next, you can provide a dedicated handler for specific servers.
+    -- For example, a handler override for the `rust_analyzer`:
+    ["rust_analyzer"] = function ()
+        require("rust-tools").setup {}
+    end
+}
 
 local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
@@ -180,38 +196,6 @@ local lspkind = require('lspkind');
 lspkind.init({})
 
 local lspconfig = require('lspconfig')
-lspconfig.pylsp.setup {
-  cmd = {"pylsp"},
-  filetypes = {"python"},
-  settings = {
-    pylsp = {
-      configurationSources = {"flake8"},
-      plugins = {
-        jedi_completion = {enabled = true},
-        jedi_hover = {enabled = true},
-        jedi_references = {enabled = true},
-        jedi_signature_help = {enabled = true},
-        jedi_symbols = {enabled = true, all_scopes = true},
-        pycodestyle = {enabled = false},
-        flake8 = {
-          enabled = true,
-          ignore = {},
-          maxLineLength = 160
-        },
-        mypy = {enabled = false},
-        isort = {enabled = false},
-        yapf = {enabled = false},
-        pylint = {enabled = false},
-        pydocstyle = {enabled = false},
-        mccabe = {enabled = false},
-        preload = {enabled = false},
-        rope_completion = {enabled = false}
-      }
-    }
-  },
-  on_attach = on_attach
-}
-
 
 -- NvimTree
 
