@@ -171,7 +171,6 @@ function kubectl {
        echo -ne "\033]11;$background\007"
    fi
 
-   # Need a better way of pinning kubectl here
    command "kubectl" $@
 
    if [[ "$1" == "exec" ]]; then
