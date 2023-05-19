@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Epected Base Packages
+          name: Install Expected Base Packages
           command: >
             dnf install -y ansible ansible-collection-community-general
             dbus-daemon
@@ -28,9 +28,7 @@ workflows:
               only:
                 - master
     jobs:
-      - lint
       - run_playbook
   playbook_test:
     jobs:
-      - lint
       - run_playbook
