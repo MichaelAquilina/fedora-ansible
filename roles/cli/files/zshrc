@@ -241,6 +241,17 @@ alias grim="git rebase -i \$(git merge-base HEAD main)"
 alias gd="git diff"
 alias gcb="git clean-branches"
 
+function grup() {
+  local target="$1"
+  if [[ -z "$target" ]]; then
+    printf "must specify target branch to rebase on\n"
+    return
+  fi
+
+  git fetch origin "$target:$target"
+  git rebase "$target"
+}
+
 export GH="git@github.com:MichaelAquilina"
 export GL="git@gitlab.com:MichaelAquilina"
 export BB="git@bitbucket.org:maquilina"
