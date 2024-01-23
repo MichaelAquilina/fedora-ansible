@@ -5,7 +5,7 @@ cli_apps:
   - fzf
   - htop
   - jq
-  - exa
+  - eza
   - neovim
   - osc
   - pass
