@@ -217,9 +217,11 @@ alias json="jq '.' -C"
 
 alias curl="curl --silent"
 
-alias ls="eza -lg"
-alias ll="eza -lg --group-directories-first"
-alias la="eza -lga --group-directories-first"
+if type eza > /dev/null; then
+  alias ls="eza -lg"
+  alias ll="eza -lg --group-directories-first"
+  alias la="eza -lga --group-directories-first"
+fi
 
 alias less="less -R"
 
