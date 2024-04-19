@@ -306,16 +306,6 @@ export MANPAGER="nvim +Man!"
 
 [ -f "$HOME/.fzf/shell/completion.zsh" ] && source "$HOME/.fzf/shell/completion.zsh" 2> /dev/null
 [ -f "$HOME/.fzf/shell/key-bindings.zsh" ] && source "$HOME/.fzf/shell/key-bindings.zsh"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "/opt/google/google-cloud-sdk/path.zsh.inc" ]; then . "/opt/google/google-cloud-sdk/path.zsh.inc"; fi
-# The next line enables shell command completion for gcloud.
-if [ -f "/opt/google/google-cloud-sdk/completion.zsh.inc" ]; then . "/opt/google/google-cloud-sdk/completion.zsh.inc"; fi
-
-# Leave as last command to prevent weird issues with PATH when
-# changing environments
-zplug load
-
 # Plugin Options
 # --------------
 
@@ -326,7 +316,6 @@ AUTO_NOTIFY_IGNORE+=("ipython")
 export YSU_MESSAGE_POSITION="after"
 export HISTORY_FILTER_EXCLUDE=("_KEY" "Authorization: ", "_TOKEN", "SECRET", "AWS_")
 export AUTOSWITCH_DEFAULT_PYTHON="python3.10"
-
 
 # p10k configuration
 # ------------------
@@ -380,13 +369,14 @@ source <(kubectl completion zsh)
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 
-t1=$(date "+%s.%N")
-printf "Profile took %.3f seconds to load\n" $((t1-t0))
+# fnm
+export NVM_DIR="$HOME/.fnm"
+[ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
+export PATH="/home/michael/.local/share/fnm:$PATH"
+eval "`fnm env`"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
+# pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
@@ -394,13 +384,25 @@ if type pyenv > /dev/null; then
   eval "$(pyenv init --path)"
 fi
 
-function prompt_my_aws_vault() {
-  if [[ -n "$AWS_VAULT" ]]; then
-    p10k segment -i "vault: "  -f white -t "${AWS_VAULT}"
-  fi
-}
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=my_aws_vault
-
 if type helm > /dev/null; then
   source <(helm completion zsh)
 fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/home/michael/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/michael/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+if [[ -n "$HOME/.npmtoken" ]]; then
+  export NPM_TOKEN="$(<$HOME/.npmtoken)"
+fi
+
+# Leave as last command to prevent weird issues with PATH when
+# changing environments
+zplug load
+
+# Make sure to keep this at the bottom of zshrc!
+t1=$(date "+%s.%N")
+printf "Profile took %.3f seconds to load\n" $((t1-t0))
