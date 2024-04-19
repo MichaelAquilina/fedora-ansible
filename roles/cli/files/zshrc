@@ -19,6 +19,7 @@ zplug "zsh-users/zsh-autosuggestions"
 zplug "MichaelAquilina/zsh-you-should-use"
 zplug "MichaelAquilina/zsh-history-filter"
 zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
+zplug "MichaelAquilina/zsh-autoswitch-fnm"
 zplug "zsh-users/zsh-syntax-highlighting"
 # Theme
 zplug "romkatv/powerlevel10k", as:theme
