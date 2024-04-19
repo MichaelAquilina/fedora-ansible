@@ -96,7 +96,9 @@ if type "nvim" >/dev/null; then
   alias vim=nvim
 fi
 
-eval $(dircolors ~/.dircolors)
+if [[ -f "~/.dircolors" ]]; then
+  eval $(dircolors ~/.dircolors)
+fi
 
 export WORDCHARS=''
 
@@ -375,15 +377,17 @@ if type kubectl > /dev/null; then
 fi
 
 # Enable terraform autocomplete
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/bin/terraform terraform
+if type terraform > /dev/null; then
+  autoload -U +X bashcompinit && bashcompinit
+  complete -o nospace -C /usr/bin/terraform terraform
+fi
 
 # fnm
 if type fnm > /dev/null; then
   export NVM_DIR="$HOME/.fnm"
   [ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
-  export PATH="/home/michael/.local/share/fnm:$PATH"
+  export PATH="$HOME/.local/share/fnm:$PATH"
   eval "`fnm env`"
 fi
 
@@ -400,10 +404,10 @@ if type helm > /dev/null; then
 fi
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/home/michael/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/michael/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 
 if [[ -n "$HOME/.npmtoken" ]]; then
