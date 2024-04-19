@@ -23,6 +23,7 @@ packer.startup(function(use)
   use({'folke/tokyonight.nvim', branch = 'main' });
 
   -- Functionality
+  use({'wellle/targets.vim'});
   use({'kyazdani42/nvim-tree.lua'});
   use('norcalli/nvim-colorizer.lua');
   use('lukas-reineke/indent-blankline.nvim');
@@ -49,6 +50,8 @@ packer.startup(function(use)
   use({'towolf/vim-helm'});
 
   -- LSP
+  use({'VonHeikemen/lsp-zero.nvim'});
+  use({'soulis-1256/eagle.nvim'});
   use({'neovim/nvim-lspconfig'});
   use({
     "glepnir/lspsaga.nvim",
@@ -77,7 +80,6 @@ packer.startup(function(use)
   use({'windwp/nvim-ts-autotag'});
 
   -- Git
-  use('airblade/vim-gitgutter')
   use('tpope/vim-fugitive');
   use('tpope/vim-rhubarb');
 
@@ -114,7 +116,7 @@ telescope.setup({
       case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
     }
   },
-  pickers = {
+pickers = {
     buffers = {
       sort_mru = true,
       sort_lastused = true,
@@ -127,9 +129,15 @@ telescope.load_extension("fzf");
 
 require('colorizer').setup()
 
+--- Eagle
+
+require('eagle').setup({})
+vim.o.mousemoveevent = true
+
 -- Treesitter configuration
 
 require('nvim-tree').setup()
+
 
 local treesitter = require('nvim-treesitter.configs')
 treesitter.setup({
@@ -154,51 +162,37 @@ treesitter.setup({
 })
 
 -- Lsp configuration
+local lsp_zero = require('lsp-zero')
 
-local cmp = require('cmp')
+lsp_zero.on_attach(function(client, bufnr)
+  lsp_zero.default_keymaps({buffer = bufnr})
+end)
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  -- Replace the language servers listed here
+  -- with the ones you want to install
+  ensure_installed = {},
+  handlers = {
+    lsp_zero.default_setup,
+  }
+})
+
+local cmp = require('cmp');
+
 cmp.setup({
- snippet = {
-  -- REQUIRED - you must specify a snippet engine
-  expand = function(args)
-    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-  end,
- },
-
- mapping = cmp.mapping.preset.insert({
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
- }),
- sources = cmp.config.sources({
-  { name = 'nvim_lsp' }
- })
-});
-
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-require('mason').setup()
-require('mason-lspconfig').setup()
-
-require("mason-lspconfig").setup_handlers {
-    -- The first entry (without a key) will be the default handler
-    -- and will be called for each installed server that doesn't have
-    -- a dedicated handler.
-    function (server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup {}
-    end,
-    -- Next, you can provide a dedicated handler for specific servers.
-    -- For example, a handler override for the `rust_analyzer`:
-    ["rust_analyzer"] = function ()
-        require("rust-tools").setup {}
-    end
-}
-
-local capabilities = cmp_nvim_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-local lspkind = require('lspkind');
-lspkind.init({})
-
-local lspconfig = require('lspconfig')
+  mapping = cmp.mapping.preset.insert({
+    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+  }),
+  -- sources for autocompletion
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" }, -- LSP
+    { name = "buffer" }, -- text within the current buffer
+    { name = "path" }, -- file system paths
+  }),
+})
 
 -- NvimTree
-
 vim.g.nvim_tree_ignore = { '.git' }
 vim.g.nvim_tree_gitignore = 1
 vim.g.nvim_tree_show_icons = {
@@ -239,6 +233,7 @@ vim.keymap.set('n', '<leader>[', '<Plug>(GitGutterPrevHunk)')
 
 vim.keymap.set('n', 'gs', ':Lspsaga signature_help<CR>')
 vim.keymap.set('n', 'K', ':Lspsaga hover_doc<CR>')
+vim.keymap.set('n', '<C-LeftMouse>', '<LeftMouse>:lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', 'gd', ':lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', 'ca', ':lua vim.lsp.buf.code_action()<CR>')
 vim.keymap.set('n', 'cd', ':lua vim.diagnostic.open_float()<CR>')
@@ -263,3 +258,6 @@ vim.o.writebackup = false;
 vim.o.swapfile = false;
 vim.o.cursorline = true;
 vim.o.cursorcolumn = true;
+vim.o.expandtab = true;
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
