@@ -412,7 +412,7 @@ if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/
 if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 
-if [[ -n "$HOME/.npmtoken" ]]; then
+if [[ -f "$HOME/.npmtoken" ]]; then
   export NPM_TOKEN="$(<$HOME/.npmtoken)"
 fi
 
