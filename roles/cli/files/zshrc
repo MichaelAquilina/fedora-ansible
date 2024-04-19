@@ -385,7 +385,7 @@ if type terraform > /dev/null; then
 fi
 
 # fnm
-if type fnm > /dev/null; then
+if [[ -d "$HOME/.local/share/fnm" ]]; then
   export NVM_DIR="$HOME/.fnm"
   [ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
