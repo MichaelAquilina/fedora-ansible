@@ -153,6 +153,13 @@ function pass() {
     "$passbin" ${params[@]}
 }
 
+function ssh {
+  background="#554099"
+  echo -ne "\033]11;$background\007"
+  command "ssh" $@
+  echo -ne "\033]110;\007\033]111;\007"
+}
+
 # Make it very obvious when we are running in a k8s shell
 function kubectl {
    if [[ "$1" == "exec" ]]; then
@@ -363,18 +370,22 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=git_user
 POWERLEVEL9K_GIT_USER_FOREGROUND=37
 
 # k8s autocompletion
-source <(kubectl completion zsh)
+if type kubectl > /dev/null; then
+  source <(kubectl completion zsh)
+fi
 
 # Enable terraform autocomplete
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 
 # fnm
-export NVM_DIR="$HOME/.fnm"
-[ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
-export PATH="/home/michael/.local/share/fnm:$PATH"
-eval "`fnm env`"
+if type fnm > /dev/null; then
+  export NVM_DIR="$HOME/.fnm"
+  [ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
+  export PATH="/home/michael/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
