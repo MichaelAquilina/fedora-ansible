@@ -9,6 +9,8 @@ Setup a Fedora machine up from scratch.
 
     $ ansible-playbook setup.yml -K
 
+Hello world!
+
 Minimum version of ansible supported is 2.6
 
 .. |CircleCI| image:: https://dl.circleci.com/status-badge/img/gh/MichaelAquilina/fedora-ansible/tree/main.svg?style=svg
