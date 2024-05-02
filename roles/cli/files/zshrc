@@ -227,12 +227,23 @@ alias less="less -R"
 alias ap="ansible-playbook"
 alias dc="docker-compose"
 
+# Automatically fallsback to old style master
+# if main does not exist
+function gcom() {
+  local output="$(git checkout main 2>&1)"
+
+  if [[ "$output" == "error: pathspec 'main' did not match"* ]]; then
+    git checkout master
+  else
+    printf "$output"
+  fi
+}
+
 # Git Aliases
 alias gs="git status"
 alias gc="git commit"
 alias gca="git commit --amend"
 alias gco="git checkout"
-alias gcom="git checkout main"
 alias gap="git add -p"
 alias gpl="git pull"
 alias gr="git rebase"
