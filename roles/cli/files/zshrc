@@ -227,7 +227,7 @@ alias less="less -R"
 alias ap="ansible-playbook"
 alias dc="docker-compose"
 
-# Automatically fallsback to old style master
+# Functions that automatically fallback to old style master
 # if main does not exist
 function gcom() {
   local output="$(git checkout main 2>&1)"
@@ -237,6 +237,16 @@ function gcom() {
   else
     printf "$output"
   fi
+}
+
+function grim() {
+  local output="$(git merge-base HEAD main 2>&1)"
+
+  if [[ "$output" == "fatal: Not a valid object name main" ]]; then
+    output="$(git merge-base HEAD master)"
+  fi
+
+  git rebase -i "${output}"
 }
 
 # Git Aliases
@@ -259,7 +269,6 @@ alias gp="git push"
 alias gpw="git push && git web --pull-request"
 alias gpuh="git push -u upstream HEAD"
 alias gri="git rebase -i"
-alias grim="git rebase -i \$(git merge-base HEAD main)"
 alias gd="git diff"
 alias gcb="git clean-branches"
 
