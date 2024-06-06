@@ -227,26 +227,20 @@ alias less="less -R"
 alias ap="ansible-playbook"
 alias dc="docker-compose"
 
-# Functions that automatically fallback to old style master
-# if main does not exist
-function gcom() {
-  local output="$(git checkout main 2>&1)"
+function git-default-branch() {
+  local long_branch_name="$(git symbolic-ref --short refs/remotes/origin/HEAD)"
+  local branch_name="${long_branch_name##*/}"
+  printf "${branch_name}\n"
+}
 
-  if [[ "$output" == "error: pathspec 'main' did not match"* ]]; then
-    git checkout master
-  else
-    printf "$output"
-  fi
+function gcom() {
+  git checkout "$(git-default-branch)"
 }
 
 function grim() {
-  local output="$(git merge-base HEAD main 2>&1)"
+  local merge_base = git merge-base HEAD "$(git-default-branch)"
 
-  if [[ "$output" == "fatal: Not a valid object name main" ]]; then
-    output="$(git merge-base HEAD master)"
-  fi
-
-  git rebase -i "${output}"
+  git rebase -i "${merge_base}"
 }
 
 # Git Aliases
