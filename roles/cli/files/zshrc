@@ -238,7 +238,7 @@ function gcom() {
 }
 
 function grim() {
-  local merge_base = git merge-base HEAD "$(git-default-branch)"
+  local merge_base="$(git merge-base HEAD "$(git-default-branch)")"
 
   git rebase -i "${merge_base}"
 }
