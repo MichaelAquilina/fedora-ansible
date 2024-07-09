@@ -35,6 +35,8 @@
     value: "{{ item.key }}"
   with_items:
     - { action: "play", key: "['<Super>F6']" }
+    - { action: "previous", key: "['<Super>F5']" }
+    - { action: "next", key: "['<Super>F7']" }
 
 - name: Unset switch to application shortcuts
   dconf:
