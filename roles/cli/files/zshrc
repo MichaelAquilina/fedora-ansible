@@ -191,10 +191,6 @@ function kubectl {
    fi
 }
 
-function whatismyip() {
-  curl ifconfig.co -s --connect-timeout 1
-}
-
 ############################
 #         ALIASES          #
 ############################
@@ -303,20 +299,6 @@ alias plog='pass git log --pretty="format:%C(bold) %G? %C(cyan) %ai %C(bold yell
 
 export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
 
-# Use filtering branch names using fzf when triggered with 'git checkout **<TAB>'
-# the trigger can be customised with the environment variable $FZF_COMPLETION_TRIGGER
-# Unfortunately this does not seem to work well with aliases (e.g. gco **<TAB> does not work)
-function _fzf_complete_git() {
-  if [[ "$@" =~ "git checkout "* ]] && git status &> /dev/null; then
-
-    _fzf_complete +m -- "$@" < <(
-      git branch | cut -c 3-
-    )
-  else
-    # Fallback to default zsh completion otherwise
-    zle ${fzf_default_completion:-expand-or-complete}
-  fi
-}
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.fzf/bin:$PATH"
