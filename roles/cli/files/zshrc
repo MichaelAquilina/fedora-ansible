@@ -23,14 +23,16 @@ zplug "zsh-users/zsh-syntax-highlighting"
 # Theme
 zplug "romkatv/powerlevel10k", as:theme
 
-
-# Gist Commands
+# Git Commands
 zplug "MichaelAquilina/git-commands", \
     as:command, \
     use:git-clean-branches
 zplug "MichaelAquilina/git-commands", \
     as:command, \
     use:git-web
+zplug "MichaelAquilina/git-commands", \
+    as:command, \
+    use:git-default-branch
 
 zplug "lib/completion", from:oh-my-zsh
 
@@ -227,18 +229,14 @@ alias less="less -R"
 alias ap="ansible-playbook"
 alias dc="docker-compose"
 
-function git-default-branch() {
-  local long_branch_name="$(git symbolic-ref --short refs/remotes/origin/HEAD)"
-  local branch_name="${long_branch_name##*/}"
-  printf "${branch_name}\n"
-}
+alias bquery='bazel run $(bazel query //... | fzf)'
 
 function gcom() {
-  git checkout "$(git-default-branch)"
+  git checkout "$(git default-branch)"
 }
 
 function grim() {
-  local merge_base="$(git merge-base HEAD "$(git-default-branch)")"
+  local merge_base="$(git merge-base HEAD "$(git default-branch)")"
 
   git rebase -i "${merge_base}"
 }
@@ -264,7 +262,7 @@ alias gpw="git push && git web --pull-request"
 alias gpuh="git push -u upstream HEAD"
 alias gri="git rebase -i"
 alias gd="git diff"
-alias gcb="git clean-branches"
+alias gcb='git clean-branches $(git default-branch)'
 
 function grup() {
   local target="$1"
