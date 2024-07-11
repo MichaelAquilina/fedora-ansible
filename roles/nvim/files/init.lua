@@ -1,5 +1,7 @@
 local vim = vim
 
+vim.opt.title = true;
+
 vim.g.cp = false;
 
 -- old init.vim code will slowly be migrated out of this file
