@@ -157,13 +157,6 @@ function pass() {
     "$passbin" ${params[@]}
 }
 
-function ssh {
-  background="#554099"
-  echo -ne "\033]11;$background\007"
-  command "ssh" $@
-  echo -ne "\033]110;\007\033]111;\007"
-}
-
 # Make it very obvious when we are running in a k8s shell
 function kubectl {
    if [[ "$1" == "exec" ]]; then
@@ -195,10 +188,12 @@ function kubectl {
 #         ALIASES          #
 ############################
 
-# xterm-kitty is not handled very well on ssh connections
-# which results in very frustrating behaviour
-# setting as xterm is the next closest thing
-alias ssh="TERM=xterm ssh"
+if [ "$(cat /proc/$PPID/comm)" = "kitty" ]; then
+  # Use kitten ssh if running within the kitty terminal
+  # this allows tighter integration of shortcuts such
+  # as opening a new window in the same directory AND host
+  alias ssh="kitten ssh"
+fi
 
 alias h="history"
 alias -g NE="2>/dev/null"
