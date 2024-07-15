@@ -231,7 +231,8 @@ if [ "$(cat /proc/$PPID/comm)" = "kitty" ]; then
 fi
 
 if type tro > /dev/null; then
-  alias todo="tro create work todo --no-headers -n"
+  alias todo="tro create work todo -n"
+  alias todolist="tro show work todo --no-headers"
 fi
 
 if type eza > /dev/null; then
