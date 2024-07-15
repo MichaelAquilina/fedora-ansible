@@ -188,6 +188,36 @@ function kubectl {
 #         ALIASES          #
 ############################
 
+# Unsorted aliases, generally do not depend
+# on a specific binary being installed
+alias h="history"
+alias -g NE="2>/dev/null"
+alias v="vim"
+# Allows aliases to be expanded on watch commands
+# See https://unix.stackexchange.com/questions/25327/watch-command-alias-expansion
+alias watch='watch '
+alias curl="curl --silent"
+alias less="less -R"
+alias xopen="xdg-open"
+alias explore="nautilus"
+alias xc="xsel -i -b"
+alias md="mkdir"
+
+if type kubectl > /dev/null; then
+  alias kc="kubectl"
+fi
+
+if type ansible-playbook > /dev/null; then
+  alias ap="ansible-playbook"
+fi
+
+if type docker > /dev/null; then
+  # We should be using the inbuilt docker compose rather than
+  # the older python version
+  alias docker-compose="docker compose"
+  alias dc="docker compose"
+fi
+
 if [ "$(cat /proc/$PPID/comm)" = "kitty" ]; then
   # Use kitten ssh if running within the kitty terminal
   # this allows tighter integration of shortcuts such
@@ -200,20 +230,9 @@ if [ "$(cat /proc/$PPID/comm)" = "kitty" ]; then
   # to ensure cursor movement works correctly
 fi
 
-alias h="history"
-alias -g NE="2>/dev/null"
-
-alias v="vim"
-
-# Allows aliases to be expanded on watch commands
-# See https://unix.stackexchange.com/questions/25327/watch-command-alias-expansion
-alias watch='watch '
-
-alias kc="kubectl"
-
-alias json="jq '.' -C"
-
-alias curl="curl --silent"
+if type tro > /dev/null; then
+  alias todo="tro create work todo --no-headers -n"
+fi
 
 if type eza > /dev/null; then
   alias ls="eza -lg"
@@ -221,74 +240,66 @@ if type eza > /dev/null; then
   alias la="eza -lga --group-directories-first"
 fi
 
-alias less="less -R"
+if type bazel > /dev/null; then
+  alias bquery='bazel run $(bazel query //... | fzf)'
+fi
 
-alias ap="ansible-playbook"
-alias dc="docker-compose"
+if type git > /dev/null; then
+  function gcom() {
+    git checkout "$(git default-branch)"
+  }
 
-alias bquery='bazel run $(bazel query //... | fzf)'
+  function grim() {
+    local merge_base="$(git merge-base HEAD "$(git default-branch)")"
 
-function gcom() {
-  git checkout "$(git default-branch)"
-}
+    git rebase -i "${merge_base}"
+  }
 
-function grim() {
-  local merge_base="$(git merge-base HEAD "$(git default-branch)")"
+  # Git Aliases
+  alias gs="git status"
+  alias gc="git commit"
+  alias gca="git commit --amend"
+  alias gco="git checkout"
+  alias gap="git add -p"
+  alias gpl="git pull"
+  alias gr="git rebase"
+  alias gst="git stash"
+  alias gw="git web"
+  alias gwu="git web upstream"
+  alias gwi="git web --issues"
+  alias gwp="git web --pulls"
+  alias gwup="git web upstream --pull-request"
+  alias gpum="git pull upstream master"
+  alias gpud="git pull upstream develop"
+  alias gp="git push"
+  alias gpw="git push && git web --pull-request"
+  alias gpuh="git push -u upstream HEAD"
+  alias gri="git rebase -i"
+  alias gd="git diff"
+  alias gcb='git clean-branches $(git default-branch)'
 
-  git rebase -i "${merge_base}"
-}
+  function grup() {
+    local target="$1"
+    if [[ -z "$target" ]]; then
+      printf "must specify target branch to rebase on\n"
+      return
+    fi
 
-# Git Aliases
-alias gs="git status"
-alias gc="git commit"
-alias gca="git commit --amend"
-alias gco="git checkout"
-alias gap="git add -p"
-alias gpl="git pull"
-alias gr="git rebase"
-alias gst="git stash"
-alias gw="git web"
-alias gwu="git web upstream"
-alias gwi="git web --issues"
-alias gwp="git web --pulls"
-alias gwup="git web upstream --pull-request"
-alias gpum="git pull upstream master"
-alias gpud="git pull upstream develop"
-alias gp="git push"
-alias gpw="git push && git web --pull-request"
-alias gpuh="git push -u upstream HEAD"
-alias gri="git rebase -i"
-alias gd="git diff"
-alias gcb='git clean-branches $(git default-branch)'
+    git fetch origin "$target:$target"
+    git rebase "$target"
+  }
 
-function grup() {
-  local target="$1"
-  if [[ -z "$target" ]]; then
-    printf "must specify target branch to rebase on\n"
-    return
-  fi
+  export GH="git@github.com:MichaelAquilina"
+  export GL="git@gitlab.com:MichaelAquilina"
+  export BB="git@bitbucket.org:maquilina"
+fi
 
-  git fetch origin "$target:$target"
-  git rebase "$target"
-}
+if type tig >/dev/null; then
+  alias ta="tig --all"
+  alias t="tig"
+fi
 
-export GH="git@github.com:MichaelAquilina"
-export GL="git@gitlab.com:MichaelAquilina"
-export BB="git@bitbucket.org:maquilina"
 
-# Tig Aliases
-alias ta="tig --all"
-alias t="tig"
-
-# Docker Aliases
-alias dcr="docker-compose run --rm"
-
-# Utilities
-alias xopen="xdg-open"
-alias explore="nautilus"
-alias xc="xsel -i -b"
-alias md="mkdir"
-alias ip="ip -c=auto"
 
 if [[ -n "$WAYLAND_DISPLAY" ]]; then
     alias xc="wl-copy"
