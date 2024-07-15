@@ -55,16 +55,13 @@ packer.startup(function(use)
   use({'VonHeikemen/lsp-zero.nvim'});
   use({'soulis-1256/eagle.nvim'});
   use({'neovim/nvim-lspconfig'});
-  use({
-    "glepnir/lspsaga.nvim",
-    branch = "main",
+  use ({
+    "nvimdev/lspsaga.nvim",
+    after = "nvim-lspconfig",
     config = function()
-      local saga = require("lspsaga")
-      saga.init_lsp_saga({
-        -- your configuration
-      })
+        require("lspsaga").setup({})
     end,
-  })
+})
 
   use('ray-x/lsp_signature.nvim');
   use('williamboman/mason.nvim');
