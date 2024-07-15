@@ -49,6 +49,14 @@ zplug 'molovo/zunit', \
   use:zunit, \
   hook-build:'./build.zsh'
 
+# Use the gnome-keyring-daemon
+if [[ -n "$DESKTOP_SESSION" ]]; then
+    # Work around a bug where gnome keyring wont work unless ssh-agent is first launched
+    eval `ssh-agent -s` > /dev/null
+    # Ignore insecure-memory warning as we use an encrypted swap
+    eval `gnome-keyring-daemon -s 2>/dev/null`
+fi
+
 # Remove all aliases from random unexpected places
 unalias -a
 
@@ -85,108 +93,24 @@ zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
-# Use the gnome-keyring-daemon
-if [[ -n "$DESKTOP_SESSION" ]]; then
-    # Work around a bug where gnome keyring wont work unless ssh-agent is first launched
-    eval `ssh-agent -s` > /dev/null
-    # Ignore insecure-memory warning as we use an encrypted swap
-    eval `gnome-keyring-daemon -s 2>/dev/null`
-fi
-
-# Use NeoVim if available
-if type "nvim" >/dev/null; then
-  alias vim=nvim
-fi
-
 if [[ -f "~/.dircolors" ]]; then
   eval $(dircolors ~/.dircolors)
 fi
 
-export WORDCHARS=''
-
-setopt extended_glob
-
 export PAGER="less"
 export EDITOR="nvim"
-
+export WORDCHARS=''
+export MANPAGER="nvim +Man!"
+setopt extended_glob
 # Use pushd instead of cd
 setopt AUTO_PUSHD
 setopt PUSHD_SILENT
-
-############################
-#        FUNCTIONS         #
-############################
-
-# Synchronise pass account
-function psync() {
-  pass git pull origin master
-  pass git push origin master
-  pass git push backup master
-}
-
-# Get original pass binary path before overriding it
-export passbin="$(which pass)"
-
-# Function wrapper around the "pass" command to add some convenient functionality
-function pass() {
-    local params=()
-    if [ "$1" = "generate" ]; then
-        # Make sure that generate is only ever called with "--in-place"
-        # with existing entries to prevent overriding useful meta-data
-        local target="$HOME/.password-store/${@[-2]}.gpg"
-
-        if stat "$target" &> /dev/null && [ ${@[(ie)-i]} -gt ${#@} ]; then
-            (>&2 printf "${RED}")
-            (>&2 printf "Don't use generate without -i (in-place)!\n")
-            (>&2 printf "Automatically inserting -i for you\n")
-            (>&2 printf "${NORMAL}")
-            # automatically insert -i
-            params=("${@[@]:1:1}" "-i" "${@[@]:2}")
-        fi
-    fi
-
-    # Only re-use the parameters passed in if nothing was populated
-    if [[ -z "$params" ]]; then
-        params=("${@[@]:1}")
-    fi
-    (>&2 printf "${YELLOW}")
-    (>&2 printf "Generated pass command: %s %s\n" "$passbin" "${(j: :)params[@]}")
-    (>&2 printf "${NORMAL}")
-
-    # Actually execute the command
-    "$passbin" ${params[@]}
-}
-
-# Make it very obvious when we are running in a k8s shell
-function kubectl {
-   if [[ "$1" == "exec" ]]; then
-       local context="$(command kubectl config current-context)"
-       local background
-
-       if [[ "$context" = *"-pre-prod-bo"* ]]; then
-         background="#706611"
-       elif [[ "$context" = *"-prod-bo"* ]]; then
-         background="#783333"
-       else
-         printf "WARNING! Unknown context: %s\n" "$context"
-         background="#965599"
-       fi
-
-       # Escape command to set background colours
-       echo -ne "\033]11;$background\007"
-   fi
-
-   command "kubectl" $@
-
-   if [[ "$1" == "exec" ]]; then
-     # Escape command to reset background colours
-     echo -ne "\033]110;\007\033]111;\007"
-   fi
-}
-
-############################
-#         ALIASES          #
-############################
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export AUTO_NOTIFY_THRESHOLD=8
+export AUTO_NOTIFY_EXPIRE_TIME=4000
+AUTO_NOTIFY_IGNORE+=("ipython")
+export YSU_MESSAGE_POSITION="after"
+export HISTORY_FILTER_EXCLUDE=("_KEY" "Authorization: ", "_TOKEN", "SECRET", "AWS_")
 
 # Unsorted aliases, generally do not depend
 # on a specific binary being installed
@@ -203,8 +127,120 @@ alias explore="nautilus"
 alias xc="xsel -i -b"
 alias md="mkdir"
 
+# Add all the various PATHS here
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.yarn/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.rvm/bin:$PATH"
+export PATH="$HOME/nvim-linux64/bin:$PATH"
+export PATH="$PATH:/usr/lib/postgresql11/bin"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+# Add all functions, aliases and automations
+# specific to each command or tool in its own
+# section where the dependency is first checked
+
+if type "nvim" >/dev/null; then
+  # Use NeoVim if available
+  alias vim=nvim
+fi
+
+if type pass > /dev/null; then
+  alias plog='pass git log --pretty="format:%C(bold) %G? %C(cyan) %ai %C(bold yellow)%s"'
+
+  # Synchronise pass account
+  function psync() {
+    pass git pull origin master
+    pass git push origin master
+    pass git push backup master
+  }
+
+  # Get original pass binary path before overriding it
+  export passbin="$(which pass)"
+
+  # Function wrapper around the "pass" command to add some convenient functionality
+  function pass() {
+      local params=()
+      if [ "$1" = "generate" ]; then
+          # Make sure that generate is only ever called with "--in-place"
+          # with existing entries to prevent overriding useful meta-data
+          local target="$HOME/.password-store/${@[-2]}.gpg"
+
+          if stat "$target" &> /dev/null && [ ${@[(ie)-i]} -gt ${#@} ]; then
+              (>&2 printf "${RED}")
+              (>&2 printf "Don't use generate without -i (in-place)!\n")
+              (>&2 printf "Automatically inserting -i for you\n")
+              (>&2 printf "${NORMAL}")
+              # automatically insert -i
+              params=("${@[@]:1:1}" "-i" "${@[@]:2}")
+          fi
+      fi
+
+      # Only re-use the parameters passed in if nothing was populated
+      if [[ -z "$params" ]]; then
+          params=("${@[@]:1}")
+      fi
+      (>&2 printf "${YELLOW}")
+      (>&2 printf "Generated pass command: %s %s\n" "$(command pass)" "${(j: :)params[@]}")
+      (>&2 printf "${NORMAL}")
+
+      # Actually execute the command
+      command pass ${params[@]}
+  }
+fi
+
+# pyenv
+
+if type pyenv > /dev/null; then
+  eval "$(pyenv init -)"
+  eval "$(pyenv init --path)"
+  eval "$(pyenv virtualenv-init -)"
+fi
+
+if type helm > /dev/null; then
+  source <(helm completion zsh)
+fi
+
+# Enable terraform autocomplete
+if type terraform > /dev/null; then
+  autoload -U +X bashcompinit && bashcompinit
+  complete -o nospace -C /usr/bin/terraform terraform
+fi
+
 if type kubectl > /dev/null; then
+  source <(kubectl completion zsh)
+
   alias kc="kubectl"
+
+  # Make it very obvious when we are running in a k8s shell
+  function kubectl {
+     if [[ "$1" == "exec" ]]; then
+         local context="$(command kubectl config current-context)"
+         local background
+
+         if [[ "$context" = *"-pre-prod-bo"* ]]; then
+           background="#706611"
+         elif [[ "$context" = *"-prod-bo"* ]]; then
+           background="#783333"
+         else
+           printf "WARNING! Unknown context: %s\n" "$context"
+           background="#965599"
+         fi
+
+         # Escape command to set background colours
+         echo -ne "\033]11;$background\007"
+     fi
+
+     command "kubectl" $@
+
+     if [[ "$1" == "exec" ]]; then
+       # Escape command to reset background colours
+       echo -ne "\033]110;\007\033]111;\007"
+     fi
+  }
 fi
 
 if type ansible-playbook > /dev/null; then
@@ -243,6 +279,16 @@ fi
 
 if type bazel > /dev/null; then
   alias bquery='bazel run $(bazel query //... | fzf)'
+fi
+
+if [[ -f "$HOME/.npmtoken" ]]; then
+  export NPM_TOKEN="$(<$HOME/.npmtoken)"
+fi
+
+if type gcloud > /dev/null; then
+  if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+  if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+  export GOOGLE_APPLICATION_CREDENTIALS="/home/michael/.config/gcloud/application_default_credentials.json"
 fi
 
 if type git > /dev/null; then
@@ -300,99 +346,11 @@ if type tig >/dev/null; then
   alias t="tig"
 fi
 
-
-
-if [[ -n "$WAYLAND_DISPLAY" ]]; then
-    alias xc="wl-copy"
-fi
-
-alias plog='pass git log --pretty="format:%C(bold) %G? %C(cyan) %ai %C(bold yellow)%s"'
-
-
-export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
-
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.fzf/bin:$PATH"
-export PATH="$HOME/.yarn/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.rvm/bin:$PATH"
-export PATH="$HOME/nvim-linux64/bin:$PATH"
-export PATH="$PATH:/usr/lib/postgresql11/bin"
-
-export MANPAGER="nvim +Man!"
-
 if type fzf > /dev/null; then
   source <(fzf --zsh)
   [ -f "$HOME/.fzf/shell/completion.zsh" ] && source "$HOME/.fzf/shell/completion.zsh" 2> /dev/null
   [ -f "$HOME/.fzf/shell/key-bindings.zsh" ] && source "$HOME/.fzf/shell/key-bindings.zsh"
-fi
-
-# Plugin Options
-# --------------
-
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
-export AUTO_NOTIFY_THRESHOLD=8
-export AUTO_NOTIFY_EXPIRE_TIME=4000
-AUTO_NOTIFY_IGNORE+=("ipython")
-export YSU_MESSAGE_POSITION="after"
-export HISTORY_FILTER_EXCLUDE=("_KEY" "Authorization: ", "_TOKEN", "SECRET", "AWS_")
-export AUTOSWITCH_DEFAULT_PYTHON="python3.10"
-
-# p10k configuration
-# ------------------
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[[ ! -f "~/.cargo/env" ]] || source ~/.cargo/env
-
-function prompt_git_user() {
-  if [[ -d ".git" ]]; then
-    p10k segment -i "👥" -t "$(git config user.email)"
-  fi
-}
-
-# Originally written by romkatv here:
-# https://github.com/romkatv/powerlevel10k/issues/734
-# tweaked by myself so that it works with all aliases associated with the trigger
-function p10k-on-post-widget() {
-  # if P9K_COMMANDS does not contain git, we can exit early
-  if [[ $P9K_COMMANDS[(I)(|*[/$z])git] != 0 ]]; then
-    # if buffer contains "commit" then user is likely using 'git commit'
-    local z=$'\0'
-    if [[ $BUFFER == *commit* ]]; then
-      p10k display '*/git_user'=show
-      return
-    fi
-
-    # check if buffer matches any aliases for git commit we have
-    local key
-    for key in "${(@k)aliases}"; do
-      local value="${aliases[$key]}"
-      if [[ "$value" == "git commit"* && ("$BUFFER" == "$key" || "$BUFFER" == "$key "*) ]]; then
-        p10k display '*/git_user'=show
-        return
-      fi
-    done
-  fi
-
-  # if nothing matches, hide the prompt
-  p10k display '*/git_user'=hide
-}
-
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=git_user
-POWERLEVEL9K_GIT_USER_FOREGROUND=37
-
-# k8s autocompletion
-if type kubectl > /dev/null; then
-  source <(kubectl completion zsh)
-fi
-
-# Enable terraform autocomplete
-if type terraform > /dev/null; then
-  autoload -U +X bashcompinit && bashcompinit
-  complete -o nospace -C /usr/bin/terraform terraform
+  export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
 fi
 
 # fnm
@@ -405,30 +363,13 @@ if [[ -d "$HOME/.local/share/fnm" ]]; then
   eval "`fnm env`"
 fi
 
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+# ====================
+#  p10k configuration
+#=====================
 
-if type pyenv > /dev/null; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv init --path)"
-  eval "$(pyenv virtualenv-init -)"
-fi
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if type helm > /dev/null; then
-  source <(helm completion zsh)
-fi
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
-
-
-if [[ -f "$HOME/.npmtoken" ]]; then
-  export NPM_TOKEN="$(<$HOME/.npmtoken)"
-fi
 
 # Leave as last command to prevent weird issues with PATH when
 # changing environments

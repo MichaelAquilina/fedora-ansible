@@ -19,6 +19,46 @@
 [[ ! -o 'no_brace_expand' ]] || p10k_config_opts+=('no_brace_expand')
 'builtin' 'setopt' 'no_aliases' 'no_sh_glob' 'brace_expand'
 
+# All My own custom stuff is here
+function prompt_git_user() {
+  if [[ -d ".git" ]]; then
+    p10k segment -i "👥" -t "$(git config user.email)"
+  fi
+}
+
+# Originally written by romkatv here:
+# https://github.com/romkatv/powerlevel10k/issues/734
+# tweaked by myself so that it works with all aliases associated with the trigger
+function p10k-on-post-widget() {
+  # if P9K_COMMANDS does not contain git, we can exit early
+  if [[ $P9K_COMMANDS[(I)(|*[/$z])git] != 0 ]]; then
+    # if buffer contains "commit" then user is likely using 'git commit'
+    local z=$'\0'
+    if [[ $BUFFER == *commit* ]]; then
+      p10k display '*/git_user'=show
+      return
+    fi
+
+    # check if buffer matches any aliases for git commit we have
+    local key
+    for key in "${(@k)aliases}"; do
+      local value="${aliases[$key]}"
+      if [[ "$value" == "git commit"* && ("$BUFFER" == "$key" || "$BUFFER" == "$key "*) ]]; then
+        p10k display '*/git_user'=show
+        return
+      fi
+    done
+  fi
+
+  # if nothing matches, hide the prompt
+  p10k display '*/git_user'=hide
+}
+
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=git_user
+POWERLEVEL9K_GIT_USER_FOREGROUND=37
+
+# -------- end of my custom stuff -----------
+
 () {
   emulate -L zsh
   setopt no_unset extended_glob
