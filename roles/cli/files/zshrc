@@ -193,6 +193,11 @@ if [ "$(cat /proc/$PPID/comm)" = "kitty" ]; then
   # this allows tighter integration of shortcuts such
   # as opening a new window in the same directory AND host
   alias ssh="kitten ssh"
+
+  # If you are using another tool such as gcloud which
+  # does not use the ssh alias above, then make sure to
+  # set ~/.ssh/environment to contain TERM=xterm-256color
+  # to ensure cursor movement works correctly
 fi
 
 alias h="history"
