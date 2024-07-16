@@ -71,14 +71,22 @@ setopt INC_APPEND_HISTORY_TIME
 
 setopt INTERACTIVE_COMMENTS
 setopt PROMPT_CR
+setopt extended_glob
+# Use pushd instead of cd
+setopt AUTO_PUSHD
+setopt PUSHD_SILENT
 
-PREFERRED_HISTFILE="$HOME/Documents/zsh_history"
-if [[ -f "$PREFERRED_HISTFILE" ]]; then
-  export HISTFILE="$PREFERRED_HISTFILE"
-fi
-
-# show ISO8601 timestamp with history
-alias history="fc -li 1"
+export PAGER="less"
+export EDITOR="nvim"
+export WORDCHARS=''
+export MANPAGER="nvim +Man!"
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+export AUTO_NOTIFY_THRESHOLD=8
+export AUTO_NOTIFY_EXPIRE_TIME=4000
+AUTO_NOTIFY_IGNORE+=("ipython")
+export YSU_MESSAGE_POSITION="after"
+export HISTORY_FILTER_EXCLUDE=("_KEY" "Authorization: ", "_TOKEN", "SECRET", "AWS_")
+export HISTFILE="$HOME/.zsh_history"
 
 bindkey '^[[1;5D' emacs-backward-word  # ctrl+left
 bindkey '^[[1;5C' emacs-forward-word   # ctrl+right
@@ -86,34 +94,12 @@ bindkey '^[[H' beginning-of-line  # home key
 bindkey '^[[F' end-of-line        # end key
 bindkey '^[[3~' delete-char       # delete key
 
-# Enable Ctrl-x-e to edit command line
-autoload -U edit-command-line
-# Emacs style
-zle -N edit-command-line
-bindkey '^xe' edit-command-line
-bindkey '^x^e' edit-command-line
-
-if [[ -f "~/.dircolors" ]]; then
-  eval $(dircolors ~/.dircolors)
-fi
-
-export PAGER="less"
-export EDITOR="nvim"
-export WORDCHARS=''
-export MANPAGER="nvim +Man!"
-setopt extended_glob
-# Use pushd instead of cd
-setopt AUTO_PUSHD
-setopt PUSHD_SILENT
-export ZSH_AUTOSUGGEST_USE_ASYNC=1
-export AUTO_NOTIFY_THRESHOLD=8
-export AUTO_NOTIFY_EXPIRE_TIME=4000
-AUTO_NOTIFY_IGNORE+=("ipython")
-export YSU_MESSAGE_POSITION="after"
-export HISTORY_FILTER_EXCLUDE=("_KEY" "Authorization: ", "_TOKEN", "SECRET", "AWS_")
-
 # Unsorted aliases, generally do not depend
 # on a specific binary being installed
+
+# show ISO8601 timestamp with history
+alias history="fc -li 1"
+
 alias h="history"
 alias -g NE="2>/dev/null"
 alias v="vim"
@@ -127,6 +113,7 @@ alias explore="nautilus"
 alias xc="xsel -i -b"
 alias md="mkdir"
 
+
 # Add all the various PATHS here
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
@@ -136,6 +123,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.rvm/bin:$PATH"
 export PATH="$HOME/nvim-linux64/bin:$PATH"
 export PATH="$PATH:/usr/lib/postgresql11/bin"
+export PATH="$HOME/google-cloud-sdk/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
@@ -146,6 +134,10 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 if type "nvim" >/dev/null; then
   # Use NeoVim if available
   alias vim=nvim
+fi
+
+if [[ -f "~/.dircolors" ]]; then
+  eval $(dircolors ~/.dircolors)
 fi
 
 if type pass > /dev/null; then
@@ -192,8 +184,6 @@ if type pass > /dev/null; then
   }
 fi
 
-# pyenv
-
 if type pyenv > /dev/null; then
   eval "$(pyenv init -)"
   eval "$(pyenv init --path)"
@@ -204,7 +194,6 @@ if type helm > /dev/null; then
   source <(helm completion zsh)
 fi
 
-# Enable terraform autocomplete
 if type terraform > /dev/null; then
   autoload -U +X bashcompinit && bashcompinit
   complete -o nospace -C /usr/bin/terraform terraform
