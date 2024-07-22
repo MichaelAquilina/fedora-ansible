@@ -206,7 +206,7 @@ vim.keymap.set('n', '<leader>el', ':edit ~/.config/nvim/init.lua<cr>')
 vim.keymap.set('n', '<leader>sv', ':source $MYVIMRC<cr>')
 vim.keymap.set('n', '<leader>ez', ':edit ~/.zshrc<cr>')
 vim.keymap.set('n', '<leader>es', ':edit ~/.config/sway/config<cr>')
-vim.keymap.set('n', '<leader>et', ':edit ~/.config/kitty/kitty.conf<cr>')
+vim.keymap.set('n', '<leader>ek', ':edit ~/.config/kitty/kitty.conf<cr>')
 
 vim.keymap.set('n', '<c-p>', ':Telescope find_files find_command=rg,--ignore,-g,!.git/,--hidden,--files<cr>')
 vim.keymap.set('n', '<c-b>', ':Telescope buffers<cr>')
