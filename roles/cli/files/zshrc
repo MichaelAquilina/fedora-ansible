@@ -258,6 +258,12 @@ fi
 if type tro > /dev/null; then
   alias todo="tro create work todo -n"
   alias todolist="tro show work todo --no-headers"
+
+  function trello() {
+    local board="$1"
+    local url="$(tro url $board)"
+    xdg-open "$url"
+  }
 fi
 
 if type eza > /dev/null; then
