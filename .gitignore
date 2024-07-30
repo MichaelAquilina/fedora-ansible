@@ -3,3 +3,6 @@
 setup.retry
 *.swp
 .venv
+# ignored unless explicitly added
+roles/core/files/kitty/*
+roles/core/files/bin/*
