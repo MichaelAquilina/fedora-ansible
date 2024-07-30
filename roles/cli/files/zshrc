@@ -213,9 +213,9 @@ if type kubectl > /dev/null; then
          local context="$(command kubectl config current-context)"
          local background
 
-         if [[ "$context" = *"-pre-prod-bo"* ]]; then
+         if [[ "$context" = *"-pre-prod"* ]]; then
            background="#706611"
-         elif [[ "$context" = *"-prod-bo"* ]]; then
+         elif [[ "$context" = *"-prod"* ]]; then
            background="#783333"
          else
            printf "WARNING! Unknown context: %s\n" "$context"
