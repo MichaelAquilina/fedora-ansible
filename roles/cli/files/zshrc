@@ -276,7 +276,13 @@ if type eza > /dev/null; then
 fi
 
 if type bazel > /dev/null; then
-  alias bquery='bazel run $(bazel query //... | fzf)'
+  function bquery() {
+    result="$(bazel query //... | fzf)"
+    BUFFER="$BUFFER$result"
+  }
+
+  zle -N bquery
+  bindkey '^B' bquery
 fi
 
 if [[ -f "$HOME/.npmtoken" ]]; then
