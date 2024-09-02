@@ -300,6 +300,10 @@ if type git > /dev/null; then
     git checkout "$(git default-branch)"
   }
 
+  function grm() {
+    git rebase "$(git default-branch)"
+  }
+
   function grim() {
     local merge_base="$(git merge-base HEAD "$(git default-branch)")"
 
