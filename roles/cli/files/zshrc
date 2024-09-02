@@ -148,9 +148,9 @@ if type pass > /dev/null; then
 
   # Synchronise pass account
   function psync() {
-    pass git pull origin master
-    pass git push origin master
-    pass git push backup master
+    command pass git pull origin master
+    command pass git push origin master
+    command pass git push backup master
   }
 
   # Get original pass binary path before overriding it
