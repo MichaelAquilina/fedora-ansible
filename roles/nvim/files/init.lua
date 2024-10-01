@@ -236,6 +236,7 @@ vim.keymap.set('n', '<C-LeftMouse>', '<LeftMouse>:lua vim.lsp.buf.definition()<C
 vim.keymap.set('n', 'gd', ':lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', 'ca', ':lua vim.lsp.buf.code_action()<CR>')
 vim.keymap.set('n', 'cd', ':lua vim.diagnostic.open_float()<CR>')
+vim.keymap.set('n', 'gu', ':Telescope lsp_references<CR>')
 
 vim.keymap.set('v', '<leader>gb', ':GBrowse<cr>')
 
