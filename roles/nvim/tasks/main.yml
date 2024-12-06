@@ -23,6 +23,7 @@
   loop:
     - "init.lua"
     - "legacy.vim"
+    - "lua/config/lazy.lua"
   register: configuration_result
 
 - name: node dependencies installed
