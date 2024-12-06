@@ -173,7 +173,6 @@ require('mason-lspconfig').setup({
         'pylsp',
         'lua_ls',
         'ts_ls',
-        'gopls',
         'clangd',
     },
     handlers = {
