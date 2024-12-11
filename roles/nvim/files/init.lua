@@ -42,7 +42,6 @@ vim.o.tabstop = 4
 
 require('config.lazy');
 
-
 vim.keymap.set('n', '<leader>ev', ':edit $MYVIMRC<cr>')
 vim.keymap.set('n', '<leader>el', ':edit ~/.config/nvim/init.lua<cr>')
 vim.keymap.set('n', '<leader>sv', ':source $MYVIMRC<cr>')

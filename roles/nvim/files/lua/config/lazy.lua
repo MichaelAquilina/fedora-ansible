@@ -12,6 +12,9 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.opt.rtp:prepend(lazypath);
 
 require("lazy").setup({
@@ -27,8 +30,17 @@ require("lazy").setup({
     },
 
     -- Functionality
+    { 'numToStr/Comment.nvim' },
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true
+    },
+
     { 'wellle/targets.vim' },
-    { 'kyazdani42/nvim-tree.lua' },
+    { 'nvim-tree/nvim-tree.lua' },
+    { 'nvim-tree/nvim-web-devicons' },
+
     { 'norcalli/nvim-colorizer.lua' },
     { 'lukas-reineke/indent-blankline.nvim' },
     { 'akinsho/bufferline.nvim', branch = 'main' },
@@ -73,8 +85,6 @@ require("lazy").setup({
 
     { 'hrsh7th/nvim-cmp' },
     { 'hrsh7th/cmp-nvim-lsp' },
-    { 'L3MON4D3/LuaSnip' },
-    { 'saadparwaiz1/cmp_luasnip' },
     { 'onsails/lspkind-nvim' },
 
     -- Treesitter
@@ -83,17 +93,16 @@ require("lazy").setup({
         build = ':TSUpdate',
     },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
-    { 'windwp/nvim-ts-autotag' },
 
     -- Git
     { 'tpope/vim-fugitive' },
     { 'tpope/vim-rhubarb' },
 
     { 'tpope/vim-sleuth' },     -- Automatic tab expand configuration
-    { 'tpope/vim-commentary' }, -- Comment out blocks of code
     {
         'kylechui/nvim-surround',
         version = '*',
+        event = 'VeryLazy',
         config = function()
             require("nvim-surround").setup({
             })
@@ -193,12 +202,7 @@ cmp.setup({
     }),
 })
 
--- NvimTree
-vim.g.nvim_tree_ignore = { '.git' }
-vim.g.nvim_tree_gitignore = 1
-vim.g.nvim_tree_show_icons = {
-    git = 0,
-    folders = 1,
-    files = 0,
-    folder_arrows = 1,
-};
+require("nvim-tree").setup({
+});
+
+require("nvim-web-devicons").setup()
