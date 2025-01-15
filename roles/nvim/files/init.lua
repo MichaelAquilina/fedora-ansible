@@ -4,6 +4,7 @@ vim.opt.title = true;
 
 vim.g.cp = false;
 
+-- TODO:
 -- old init.vim code will slowly be migrated out of this file
 vim.cmd("source ~/.config/nvim/legacy.vim");
 

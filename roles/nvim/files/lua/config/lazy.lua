@@ -30,6 +30,7 @@ require("lazy").setup({
     },
 
     -- Functionality
+    { 'cappyzawa/trim.nvim' },
     { 'numToStr/Comment.nvim' },
     {
         'windwp/nvim-autopairs',
@@ -139,6 +140,10 @@ telescope.setup({
 telescope.load_extension("fzf");
 
 require('colorizer').setup()
+
+require('trim').setup({
+    ft_blocklist = {'patch'},
+});
 
 require('eagle').setup({})
 
