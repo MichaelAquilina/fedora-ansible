@@ -44,6 +44,18 @@ vim.o.tabstop = 4
 
 require('config.lazy');
 
+function CopyRelativePath(includeLineNumber)
+    local filePath = vim.fn.expand('%:p');
+    local lineNumber = vim.fn.line('.');
+    if includeLineNumber then
+        vim.api.nvim_echo({{'Copied relative path to clipboard (with line number)', 'None'}}, false, {});
+        vim.fn.setreg('+', string.format('%s:%d', filePath, lineNumber))
+    else
+        vim.api.nvim_echo({{'Copied relative path to clipboard', 'None'}}, false, {});
+        vim.fn.setreg('+', filePath);
+    end
+end
+
 vim.keymap.set('n', '<leader>ev', ':edit $MYVIMRC<cr>')
 vim.keymap.set('n', '<leader>el', ':edit ~/.config/nvim/init.lua<cr>')
 vim.keymap.set('n', '<leader>sv', ':source $MYVIMRC<cr>')
@@ -69,8 +81,8 @@ vim.keymap.set('n', '<esc>', ':let @/=""<cr>') -- Cancel current search
 vim.keymap.set('n', '-', 'ddp')
 vim.keymap.set('n', '_', 'ddkP')
 
-vim.keymap.set('n', '<leader>,', ':call CopyRelativePath(0)<cr>')
-vim.keymap.set('n', '<leader>.', ':call CopyRelativePath(1)<cr>')
+vim.keymap.set('n', '<leader>,', ':lua CopyRelativePath(false)<cr>')
+vim.keymap.set('n', '<leader>.', ':lua CopyRelativePath(true)<cr>')
 
 vim.keymap.set('n', '<leader>]', '<Plug>(GitGutterNextHunk)')
 vim.keymap.set('n', '<leader>[', '<Plug>(GitGutterPrevHunk)')
