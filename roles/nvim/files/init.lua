@@ -83,6 +83,6 @@ vim.keymap.set('n', 'ca', ':lua vim.lsp.buf.code_action()<CR>')
 vim.keymap.set('n', 'cd', ':lua vim.diagnostic.open_float()<CR>')
 vim.keymap.set('n', 'gu', ':Telescope lsp_references<CR>')
 
-vim.keymap.set('v', '<leader>gb', ':GBrowse<cr>')
+vim.keymap.set('v', '<leader>gb', ':GBrowse!<cr>')
 
 vim.keymap.set('n', '<leader>/', ':NvimTreeToggle<cr>')
