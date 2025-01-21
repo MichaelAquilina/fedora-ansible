@@ -9,8 +9,9 @@ vim.g.cp = false;
 vim.cmd("source ~/.config/nvim/legacy.vim");
 
 vim.o.termguicolors = true;
-vim.g.nvim_tree_disable_netrw = 0
-vim.g.nvim_tree_hijack_netrw = 0
+vim.g.nvim_tree_disable_netrw = 0;
+vim.g.nvim_tree_hijack_netrw = 0;
+vim.g.editorconfig = false;
 
 vim.g.mapleader = " ";
 
