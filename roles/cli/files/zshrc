@@ -191,10 +191,8 @@ if type pass > /dev/null; then
   }
 fi
 
-if type pyenv > /dev/null; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv init --path)"
-  eval "$(pyenv virtualenv-init -)"
+if [[ -d $PYENV_ROOT/bin ]]; then
+  eval "$(pyenv init - zsh)"
 fi
 
 if type helm > /dev/null; then
