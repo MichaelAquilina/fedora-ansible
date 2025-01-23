@@ -30,6 +30,7 @@ require("lazy").setup({
     },
 
     -- Functionality
+    { 'mfussenegger/nvim-lint'},
     { 'cappyzawa/trim.nvim' },
     { 'numToStr/Comment.nvim' },
     {
@@ -141,6 +142,16 @@ telescope.load_extension("fzf");
 
 require('colorizer').setup()
 
+require('lint').linters_by_ft = {
+    python = {'mypy'},
+}
+
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+  callback = function()
+    require("lint").try_lint()
+  end
+})
+
 require('trim').setup({
     ft_blocklist = {'patch'},
 });
@@ -188,6 +199,7 @@ require('mason-lspconfig').setup({
         'lua_ls',
         'ts_ls',
         'clangd',
+        'mypy',
     },
     handlers = {
         lsp_zero.default_setup,
