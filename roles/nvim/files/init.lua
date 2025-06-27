@@ -91,7 +91,7 @@ vim.keymap.set('n', 'gs', ':Lspsaga signature_help<CR>')
 vim.keymap.set('n', 'K', ':Lspsaga hover_doc<CR>')
 vim.keymap.set('n', '<C-LeftMouse>', '<LeftMouse>:lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', 'gd', ':lua vim.lsp.buf.definition()<CR>')
-vim.keymap.set('n', 'ca', ':lua vim.lsp.buf.code_action()<CR>')
+-- vim.keymap.set('n', 'ca', ':lua vim.lsp.buf.code_action()<CR>')
 vim.keymap.set('n', 'cd', ':lua vim.diagnostic.open_float()<CR>')
 vim.keymap.set('n', 'gu', ':Telescope lsp_references<CR>')
 
