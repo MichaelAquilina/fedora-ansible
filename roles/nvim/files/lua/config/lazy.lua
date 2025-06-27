@@ -57,7 +57,34 @@ require("lazy").setup({
     -- Telescope
     {
         'nvim-telescope/telescope.nvim',
-        dependencies = { { 'nvim-lua/plenary.nvim' } }
+        dependencies = { { 'nvim-lua/plenary.nvim' } },
+        opts = {
+            defaults = {
+                layout_strategy = 'flex',
+            },
+            layout_config = {
+                height = 0.95,
+                width = 0.95,
+                vertical = {
+                    preview_cutoff = 60,
+                    preview_height = 0.7,
+                }
+            },
+            extensions = {
+                fzf = {
+                    fuzzy = true,                   -- false will only do exact matching
+                    override_generic_sorter = true, -- override the generic sorter
+                    override_file_sorter = true,    -- override the file sorter
+                    case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
+                }
+            },
+            pickers = {
+                buffers = {
+                    sort_mru = true,
+                    sort_lastused = true,
+                }
+            }
+        }
     },
     {
         'nvim-telescope/telescope-fzf-native.nvim',
@@ -99,6 +126,7 @@ require("lazy").setup({
     -- Git
     { 'tpope/vim-fugitive' },
     { 'tpope/vim-rhubarb' },
+    { 'sindrets/diffview.nvim' },
 
     { 'tpope/vim-sleuth' },     -- Automatic tab expand configuration
     {
@@ -122,22 +150,6 @@ require("lazy").setup({
 require("bufferline").setup {}
 
 local telescope = require('telescope')
-telescope.setup({
-    extensions = {
-        fzf = {
-            fuzzy = true,                   -- false will only do exact matching
-            override_generic_sorter = true, -- override the generic sorter
-            override_file_sorter = true,    -- override the file sorter
-            case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
-        }
-    },
-    pickers = {
-        buffers = {
-            sort_mru = true,
-            sort_lastused = true,
-        }
-    }
-});
 telescope.load_extension("fzf");
 
 require('colorizer').setup()
@@ -168,6 +180,19 @@ require('nvim-treesitter.configs').setup({
         enable = true
     },
     textobjects = {
+        lsp_interop = {
+            enable = true,
+            peek_definition_code = {
+                ["<leader>df"] = "@function.outer",
+            }
+        },
+        move = {
+            enable = true;
+            set_jumps = true,
+            goto_next_start = {
+                ["]f"] = "@function.outer",
+            },
+        },
         select = {
             enable = true,
             lookahead = true,
@@ -199,7 +224,6 @@ require('mason-lspconfig').setup({
         'lua_ls',
         'ts_ls',
         'clangd',
-        'mypy',
     },
     handlers = {
         lsp_zero.default_setup,
