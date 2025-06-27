@@ -45,7 +45,7 @@ vim.o.tabstop = 4
 require('config.lazy');
 
 function CopyRelativePath(includeLineNumber)
-    local filePath = vim.fn.expand('%:p');
+    local filePath = vim.fn.expand('%');
     local lineNumber = vim.fn.line('.');
     if includeLineNumber then
         vim.api.nvim_echo({{'Copied relative path to clipboard (with line number)', 'None'}}, false, {});
