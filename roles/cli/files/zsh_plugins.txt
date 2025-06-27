@@ -1,0 +1,22 @@
+ohmyzsh/ohmyzsh path:lib/completion.zsh
+
+# Zsh plugins
+zsh-users/zsh-autosuggestions
+# MichaelAquilina/zsh-auto-notify
+MichaelAquilina/zsh-you-should-use
+MichaelAquilina/zsh-history-filter
+MichaelAquilina/zsh-autoswitch-virtualenv
+zsh-users/zsh-syntax-highlighting
+
+# Theme
+romkatv/powerlevel10k
+
+# Git Commands
+MichaelAquilina/git-commands path:git-clean-branches kind:path
+MichaelAquilina/git-commands path:git-web kind:path
+MichaelAquilina/git-commands path:git-default-branch kind:path
+
+# Command line tools
+molovo/color path:color.zsh kind:path
+molovo/revolver kind:path
+molovo/zunit kind:path

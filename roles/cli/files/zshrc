@@ -15,43 +15,9 @@ zmodload "zsh/zprof"
 # record the amount of time zshrc takes to load
 t0=$(date "+%s.%N")
 
-source ~/.zplug/init.zsh
-
-zplug "zplug/zplug", hook-build: 'zplug --self-manage'
-
-zplug "zsh-users/zsh-autosuggestions"
-# zplug "MichaelAquilina/zsh-auto-notify"
-zplug "MichaelAquilina/zsh-you-should-use"
-zplug "MichaelAquilina/zsh-history-filter"
-zplug "MichaelAquilina/zsh-autoswitch-virtualenv"
-zplug "zsh-users/zsh-syntax-highlighting"
-# Theme
-zplug "romkatv/powerlevel10k", as:theme
-
-# Git Commands
-zplug "MichaelAquilina/git-commands", \
-    as:command, \
-    use:git-clean-branches
-zplug "MichaelAquilina/git-commands", \
-    as:command, \
-    use:git-web
-zplug "MichaelAquilina/git-commands", \
-    as:command, \
-    use:git-default-branch
-
-zplug "lib/completion", from:oh-my-zsh
-
-zplug 'molovo/color', \
-  as:command, \
-  use:'color.zsh', \
-  rename-to:color
-zplug 'molovo/revolver', \
-  as:command, \
-  use:revolver
-zplug 'molovo/zunit', \
-  as:command, \
-  use:zunit, \
-  hook-build:'./build.zsh'
+autoload -Uz compinit && compinit
+source $HOME/.antidote/antidote.zsh
+antidote load
 
 # Use the gnome-keyring-daemon
 if [[ -n "$DESKTOP_SESSION" ]]; then
@@ -371,7 +337,6 @@ fi
 
 # fnm
 if [[ -d "$HOME/.local/share/fnm" ]]; then
-  zplug "MichaelAquilina/zsh-autoswitch-fnm"
   export NVM_DIR="$HOME/.fnm"
   [ -s "$NVM_DIR/fnm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads fnm bash_completion
@@ -386,10 +351,6 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
-# Leave as last command to prevent weird issues with PATH when
-# changing environments
-zplug load
 
 # Make sure to keep this at the bottom of zshrc!
 t1=$(date "+%s.%N")

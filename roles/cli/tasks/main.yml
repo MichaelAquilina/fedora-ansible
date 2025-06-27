@@ -34,6 +34,7 @@
   with_items:
     - p10k.zsh
     - zshrc
+    - zsh_plugins.txt
     - tigrc
     - dircolors
 
