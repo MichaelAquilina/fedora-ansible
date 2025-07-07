@@ -12,9 +12,7 @@ zsh-users/zsh-syntax-highlighting
 romkatv/powerlevel10k
 
 # Git Commands
-MichaelAquilina/git-commands path:git-clean-branches kind:path
-MichaelAquilina/git-commands path:git-web kind:path
-MichaelAquilina/git-commands path:git-default-branch kind:path
+MichaelAquilina/git-commands kind:path
 
 # Command line tools
 molovo/color path:color.zsh kind:path
