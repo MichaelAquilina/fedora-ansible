@@ -15,7 +15,11 @@ zmodload "zsh/zprof"
 # record the amount of time zshrc takes to load
 t0=$(date "+%s.%N")
 
+# setup zsh completion system
 autoload -Uz compinit && compinit
+# enable case insensitive autocompletion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
 source $HOME/.antidote/antidote.zsh
 antidote load
 
