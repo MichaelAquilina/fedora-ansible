@@ -95,7 +95,6 @@ require("lazy").setup({
     { 'towolf/vim-helm' },
 
     -- LSP
-    { 'VonHeikemen/lsp-zero.nvim' },
     { 'soulis-1256/eagle.nvim' },
     { 'neovim/nvim-lspconfig' },
     {
@@ -109,9 +108,15 @@ require("lazy").setup({
     },
 
     { 'ray-x/lsp_signature.nvim' },
-    { 'williamboman/mason.nvim' },
-    { 'williamboman/mason-lspconfig.nvim' },
-
+    {
+        'mason-org/mason-lspconfig.nvim',
+        opts = {
+        },
+        dependencies = {
+            { 'mason-org/mason.nvim', opts = {} },
+            'neovim/nvim-lspconfig',
+        },
+    },
     { 'hrsh7th/nvim-cmp' },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'onsails/lspkind-nvim' },
@@ -208,28 +213,6 @@ require('nvim-treesitter.configs').setup({
 })
 
 -- Lsp configuration
-local lsp_zero = require('lsp-zero')
-
-lsp_zero.on_attach(function(client, bufnr)
-    lsp_zero.default_keymaps({ buffer = bufnr })
-end)
-
-require('mason').setup({})
-require('mason-lspconfig').setup({
-    -- Replace the language servers listed here
-    -- with the ones you want to install
-    automatic_installation = true,
-    ensure_installed = {
-        'pylsp',
-        'lua_ls',
-        'ts_ls',
-        'clangd',
-    },
-    handlers = {
-        lsp_zero.default_setup,
-    }
-})
-
 local cmp = require('cmp');
 cmp.setup({
     mapping = cmp.mapping.preset.insert({
