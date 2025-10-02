@@ -57,7 +57,13 @@ require("lazy").setup({
     -- Telescope
     {
         'nvim-telescope/telescope.nvim',
-        dependencies = { { 'nvim-lua/plenary.nvim' } },
+        dependencies = {
+            { 'nvim-lua/plenary.nvim' },
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
+            },
+        },
         opts = {
             defaults = {
                 layout_strategy = 'flex',
@@ -86,11 +92,6 @@ require("lazy").setup({
             }
         }
     },
-    {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
-    },
-
     -- Language support
     { 'towolf/vim-helm' },
 
@@ -180,7 +181,7 @@ require('nvim-tree').setup()
 require('nvim-treesitter.configs').setup({
     autotag = { enable = true },
     ensure_installed = "all",
-    ignore_install = { "hoon" },
+    ignore_install = { "hoon", "ipkg" },
     highlight = {
         enable = true
     },
