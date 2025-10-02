@@ -256,12 +256,6 @@ if type eza > /dev/null; then
   alias la="eza -lga --group-directories-first"
 fi
 
-if type bazel > /dev/null; then
-  function bquery() {
-    result="$(bazel query //... | fzf)"
-    BUFFER="$BUFFER$result"
-  }
-
 if [[ -f "$HOME/.npmtoken" ]]; then
   export NPM_TOKEN="$(<$HOME/.npmtoken)"
 fi
