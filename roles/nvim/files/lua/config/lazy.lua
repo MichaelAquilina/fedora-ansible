@@ -97,13 +97,12 @@ require("lazy").setup({
 
     -- LSP
     { 'soulis-1256/eagle.nvim' },
-    { 'neovim/nvim-lspconfig' },
     {
         "nvimdev/lspsaga.nvim",
-        dependencies = { 'neovim/nvim-lspconfig' },
         config = function()
             require("lspsaga").setup({
-                lightbulb = { enable = false }
+                lightbulb = { enable = false },
+                breadcrumbs = { enable = true },
             })
         end,
     },
@@ -115,7 +114,6 @@ require("lazy").setup({
         },
         dependencies = {
             { 'mason-org/mason.nvim', opts = {} },
-            'neovim/nvim-lspconfig',
         },
     },
     { 'hrsh7th/nvim-cmp' },
@@ -177,6 +175,10 @@ require('trim').setup({
 require('eagle').setup({})
 
 require('nvim-tree').setup()
+
+require("mason-lspconfig").setup({
+    automatic_enable = false
+})
 
 require('nvim-treesitter.configs').setup({
     autotag = { enable = true },

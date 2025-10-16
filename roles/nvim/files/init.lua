@@ -56,6 +56,14 @@ function CopyRelativePath(includeLineNumber)
     end
 end
 
+-- Godot LSP configuration
+vim.lsp.config('gdscript', {
+  cmd = { "nc", "localhost", "6005" },
+  filetypes = { "gd", "gdscript", "gdscript3" },
+  root_markers = {"project.godot", ".git"},
+})
+vim.lsp.enable('gdscript')
+
 vim.keymap.set('n', '<leader>ev', ':edit $MYVIMRC<cr>')
 vim.keymap.set('n', '<leader>el', ':edit ~/.config/nvim/init.lua<cr>')
 vim.keymap.set('n', '<leader>sv', ':source $MYVIMRC<cr>')
