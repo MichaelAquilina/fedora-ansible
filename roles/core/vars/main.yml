@@ -4,6 +4,7 @@ apps:
   - rhythmbox
   - fontawesome-fonts
   - google-roboto-mono-fonts
+  - ulauncher
   - google-roboto-fonts
   - kitty
   - nautilus
