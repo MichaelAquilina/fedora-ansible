@@ -38,6 +38,32 @@
     - { action: "previous", key: "['<Super>F5']" }
     - { action: "next", key: "['<Super>F7']" }
 
+
+- name: set custom key-bindings list
+  dconf:
+    key: "{{ custom_keybindings_path }}"
+    value: "['{{ custom_keybindings_path}}/custom0/', '{{ custom_keybindings_path}}/custom1/']"
+
+- name: set kitty key-bindings
+  dconf:
+    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/{{ item.key }}"
+    value: "'{{ item.value }}'"
+  with_items:
+    - { key: "binding", value: "<Alt>Return" }
+    - { key: "name", value: "kitty" }
+    - { key: "command", value: "kitty" }
+
+- name: set ulauncher key-bindings
+  dconf:
+    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/{{ item.key }}"
+    value: "'{{ item.value }}'"
+  with_items:
+    - { key: "binding", value: "<Ctrl>Space" }
+    - { key: "name", value: "ulauncher" }
+    - { key: "command", value: "ulauncher-toggle" }
+
+
+
 - name: Unset switch to application shortcuts
   dconf:
     key: "/org/gnome/shell/keybindings/switch-to-application-{{ item }}"
@@ -53,6 +79,11 @@
     - 8
     - 9
     - 0
+
+- name: disable mutter overlap key
+  dconf:
+    key: /org/gnome/mutter/overlay-key
+    value: "''"
 
 - name: Setup workspace switching shortcuts
   dconf:
