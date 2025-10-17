@@ -5,7 +5,7 @@ version: 2
 jobs:
   run_playbook:
     docker:
-      - image: "fedora"
+      - image: "fedora:42"
     steps:
       - checkout
       - run:
