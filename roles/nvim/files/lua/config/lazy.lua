@@ -114,6 +114,7 @@ require("lazy").setup({
         },
         dependencies = {
             { 'mason-org/mason.nvim', opts = {} },
+            "neovim/nvim-lspconfig",
         },
     },
     { 'hrsh7th/nvim-cmp' },
@@ -177,7 +178,7 @@ require('eagle').setup({})
 require('nvim-tree').setup()
 
 require("mason-lspconfig").setup({
-    automatic_enable = false
+    automatic_enable = true
 })
 
 require('nvim-treesitter.configs').setup({
