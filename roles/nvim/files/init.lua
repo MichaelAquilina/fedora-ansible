@@ -4,10 +4,6 @@ vim.opt.title = true;
 
 vim.g.cp = false;
 
--- TODO:
--- old init.vim code will slowly be migrated out of this file
-vim.cmd("source ~/.config/nvim/legacy.vim");
-
 vim.o.termguicolors = true;
 vim.g.nvim_tree_disable_netrw = 0;
 vim.g.nvim_tree_hijack_netrw = 0;

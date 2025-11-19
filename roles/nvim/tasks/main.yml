@@ -17,7 +17,6 @@
     path: "~/.config/nvim/{{ item }}"
   loop:
     - "init.lua"
-    - "legacy.vim"
     - "lua/config/lazy.lua"
   register: configuration_result
 
@@ -31,4 +30,3 @@
     - python3-neovim
     - cmake
     - g++
-
