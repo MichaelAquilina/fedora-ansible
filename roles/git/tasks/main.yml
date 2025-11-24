@@ -35,6 +35,12 @@
     scope: global
     value: simple
 
+- name: set default branch
+  community.general.git_config:
+    name: init.defaultBranch
+    scope: global
+    value: main
+
 - name: dont prompt mergetool
   community.general.git_config:
     name: mergetool.prompt
