@@ -12,10 +12,10 @@
     state: latest
   loop: "{{ cli_apps }}"
 
-- name: ZPlug is installed
+- name: Antidote is installed
   git:
-    repo: https://github.com/MichaelAquilina/zplug
-    dest: ~/.zplug
+    repo: https://github.com/mattmc3/antidote
+    dest: ~/.antidote
     # zplug often makes changes to itself
     force: "yes"
     update: "yes"
