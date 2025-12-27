@@ -61,6 +61,7 @@
   with_items:
     - { alias: cp, value: cherry-pick }
     - { alias: pushf, value: push --force-with-lease }
+    - { alias: rb, value: rollback }
 
 - name: global git ignore file
   community.general.git_config:
