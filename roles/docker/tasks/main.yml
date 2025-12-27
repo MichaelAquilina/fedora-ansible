@@ -3,8 +3,11 @@
 - name: docker is installed
   become: "yes"
   package:
-    name: docker
+    name: "{{ item }}"
   when: dockerenv.stat.exists == False
+  with_items:
+    - "docker"
+    - "docker-compose"
 
 - name: docker group
   become: "yes"
