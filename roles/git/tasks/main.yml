@@ -69,9 +69,15 @@
     scope: global
     value: "{{ ansible_env.HOME }}/.gitignore"
 
-- name: gpg sign is enabled
+- name: gpg sign is enabled for commit
   community.general.git_config:
     name: commit.gpgsign
+    scope: global
+    value: "true"
+
+- name: gpg sign is enabled for tag
+  community.general.git_config:
+    name: tag.gpgsign
     scope: global
     value: "true"
 
