@@ -127,6 +127,7 @@ require("lazy").setup({
         build = ':TSUpdate',
     },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    { 'nvim-treesitter/nvim-treesitter-context' },
 
     -- Git
     { 'tpope/vim-fugitive' },
