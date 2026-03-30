@@ -20,6 +20,7 @@ autoload -Uz compinit && compinit
 # enable case insensitive autocompletion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
+# ============== Plugin definitions located at ~/.zsh_plugins.txt ======================
 source $HOME/.antidote/antidote.zsh
 antidote load
 
