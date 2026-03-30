@@ -254,6 +254,32 @@ if type tro > /dev/null; then
   }
 fi
 
+if type aws > /dev/null; then
+  # "cat s3"
+  function cat3 {
+    local profile="${CAT3_DEFAULT_PROFILE}"
+
+    for arg in "${@}"
+    do
+      if [[ "$arg" == "-p="* ]]; then
+        profile="${arg#-p=}"
+      elif [[ "$arg" == "--profile="* ]]; then
+        profile="${arg#--profile=}"
+      fi
+    done
+
+    if [[ -z "$profile" ]]; then
+      echo "CAT3_DEFAULT_PROFILE or --profile must be specified"
+      return
+    fi
+
+    local uri="${@: -1}"
+
+    aws --profile="$profile" sts get-caller-identity > /dev/null 2>&1 || aws sso login --profile="$profile"
+    aws --profile="$profile" s3 cp "$uri" - | jq '.'
+  }
+fi
+
 if type eza > /dev/null; then
   alias ls="eza -lg"
   alias ll="eza -lg --group-directories-first"
