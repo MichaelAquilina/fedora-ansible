@@ -79,7 +79,6 @@ alias -g NE="2>/dev/null"
 alias v="vim"
 # Allows aliases to be expanded on watch commands
 # See https://unix.stackexchange.com/questions/25327/watch-command-alias-expansion
-alias watch='watch '
 alias curl="curl --silent"
 alias less="less -R"
 alias xopen="xdg-open"
@@ -112,6 +111,10 @@ fi
 
 if [[ -f "~/.dircolors" ]]; then
   eval $(dircolors ~/.dircolors)
+fi
+
+if type viddy > /dev/null; then
+  alias watch="viddy"
 fi
 
 if type pass > /dev/null; then
