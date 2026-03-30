@@ -4,7 +4,6 @@ ohmyzsh/ohmyzsh path:lib/completion.zsh
 zsh-users/zsh-autosuggestions
 # MichaelAquilina/zsh-auto-notify
 MichaelAquilina/zsh-you-should-use
-MichaelAquilina/zsh-history-filter
 MichaelAquilina/zsh-autoswitch-virtualenv
 zsh-users/zsh-syntax-highlighting
 
