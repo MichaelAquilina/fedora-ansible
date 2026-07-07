@@ -391,3 +391,9 @@ fi
 # Make sure to keep this at the bottom of zshrc!
 t1=$(date "+%s.%N")
 printf "Profile took %.3f seconds to load\n" $((t1-t0))
+
+# opencode
+export PATH=/home/michael/.opencode/bin:$PATH
+
+# NPM global bin (added by Qwen Code installer)
+export PATH="$HOME/.npm-global/bin:$PATH"
