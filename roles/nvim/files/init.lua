@@ -52,6 +52,15 @@ function CopyRelativePath(includeLineNumber)
     end
 end
 
+-- make the quickfix window close automatically as soon as a selection is made
+-- as opposed to remaining open
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "qf",
+    callback = function()
+        vim.keymap.set("n", "<CR>", "<CR>:cclose<CR>", { buffer = true, silent = true })
+    end,
+})
+
 -- Godot LSP configuration
 vim.lsp.config('gdscript', {
   cmd = { "nc", "localhost", "6005" },
