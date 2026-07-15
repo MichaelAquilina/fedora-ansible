@@ -371,6 +371,10 @@ if type fzf > /dev/null; then
   export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
 fi
 
+if type claude > /dev/null; then
+ export CLAUDE_CODE_DISABLE_MOUSE_CLICKS=1
+fi
+
 # fnm
 if [[ -d "$HOME/.local/share/fnm" ]]; then
   export NVM_DIR="$HOME/.fnm"
