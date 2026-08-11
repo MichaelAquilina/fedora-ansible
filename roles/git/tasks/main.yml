@@ -67,7 +67,7 @@
   community.general.git_config:
     name: core.excludesfile
     scope: global
-    value: "{{ ansible_env.HOME }}/.gitignore"
+    value: "{{ ansible_facts['env'].HOME }}/.gitignore"
 
 - name: gpg sign is enabled for commit
   community.general.git_config:
