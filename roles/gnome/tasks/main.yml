@@ -24,6 +24,24 @@
     key: /org/gnome/mutter/center-new-windows
     value: "true"
 
+- name: Show all windows from all workspaces when switching
+  dconf:
+    key: "/org/gnome/shell/{{ item }}/current-workspace-only"
+    value: "false"
+  with_items:
+    - "window-switcher"
+    - "app-switcher"
+
+- name: Alt+Tab window switching behaviour
+  dconf:
+    key: "/org/gnome/desktop/wm/keybindings/{{ item.action }}"
+    value: "{{ item.key }}"
+  with_items:
+    - { action: "switch-applications", key: "[]" }
+    - { action: "switch-applications-backward", key: "[]" }
+    - { action: "switch-windows", key: "['<Alt>Tab']" }
+    - { action: "switch-windows-backward", key: "['<Shift><Alt>Tab']" }
+
 - name: show battery percentage
   dconf:
     key: "/org/gnome/desktop/interface/show-battery-percentage"
